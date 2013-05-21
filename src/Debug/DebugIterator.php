@@ -33,33 +33,45 @@ class DebugIterator extends IteratorIterator
     public function rewind()
     {
         $this->index = 0;
-        $this->event(__FUNCTION__);
+        $this->event(__FUNCTION__ . '()');
         parent::rewind();
+        $this->event('after parent::' . __FUNCTION__ . '()');
     }
 
     public function valid()
     {
-        $this->event(__FUNCTION__);
-        return parent::valid();
+        $this->event(__FUNCTION__ . '()');
+        $valid = parent::valid();
+        $this->event(sprintf('parent::valid() is %s', $valid ? 'TRUE' : 'FALSE'));
+        return $valid;
     }
 
     public function current()
     {
-        $this->event(__FUNCTION__);
-        return parent::current();
+        $this->event(__FUNCTION__ . '()');
+        $current = parent::current();
+        $this->event(sprintf('parent::current() is %s', $this->varLabel($current)));
+        return $current;
     }
 
     public function key()
     {
-        $this->event(__FUNCTION__);
-        return parent::key();
+        $this->event(__FUNCTION__ . '()');
+        $key = parent::key();
+        $this->event(sprintf('parent::key() is %s', $this->varLabel($key)));
+        return $key;
     }
 
     public function next()
     {
         $this->index++;
-        $this->event(__FUNCTION__);
+        $this->event(__FUNCTION__ . '()');
         parent::next();
+        $this->event('after parent::' . __FUNCTION__ . '()');
+    }
+
+    final protected function varLabel($var) {
+        return is_scalar($var) ? var_export($var, true) : gettype($var);
     }
 
     final protected function event($event)
