@@ -22,7 +22,7 @@
  * how iterators work.
  */
 
-require('../src/autoload.php');
+require(__DIR__ . '/../src/autoload.php');
 
 function_exists('xdebug_disable') && xdebug_disable();
 ini_set('log_errors', 0);
@@ -30,22 +30,22 @@ ini_set('display_errors', 1);
 error_reporting(~0);
 
 $array = range('a', 'c');
-$it = new ArrayIterator($array);
+$it    = new ArrayIterator($array);
 echo "\n== Standard Foreach Example ==\n";
-foreach($it as $value) {
+foreach ($it as $value) {
     echo $value, "\n";
 }
 
-$debug = new DebugIterator($it);
+$debug = new DebugIteratorDecorator($it);
 
 echo "\n== Debug Foreach Example ==\n";
-foreach($debug as $value) {
+foreach ($debug as $value) {
     echo $value, "\n";
 }
 
 echo "\n== Debug Foreach W/ Key Example ==\n";
-foreach($debug as $key => $value) {
-    echo $value, "\n";
+foreach ($debug as $key => $value) {
+    echo $key, ' => ', $value, "\n";
 }
 
 echo "\n== Iterator Count Example ==\n";
