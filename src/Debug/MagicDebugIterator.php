@@ -41,6 +41,6 @@ class MagicDebugIterator extends DebugIterator
             return implode(', ', array_map(array($this, __FUNCTION__), $args));
         }
 
-        return var_export($args, 1);
+        return $this->varLabel($args);
     }
 }
