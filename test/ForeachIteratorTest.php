@@ -22,6 +22,13 @@
  */
 class ForeachIteratorTest extends ForeachIteratorBaseTest
 {
+    protected function setUp()
+    {
+        class_exists('ForeachIterator');
+        parent::setUp();
+    }
+
+
     /**
      * @test
      *
@@ -34,6 +41,8 @@ class ForeachIteratorTest extends ForeachIteratorBaseTest
 
     /**
      * @test
+     * @covers ForeachIterator::getIterator
+     * @covers ForeachIterator::getTraversable
      */
     public function staticUnits()
     {
@@ -59,5 +68,26 @@ class ForeachIteratorTest extends ForeachIteratorBaseTest
         $iterator = ForeachIterator::getIterator($aggregate);
         $this->assertInstanceOf('Iterator', $iterator);
         $this->assertIterationValues($expected, $iterator);
+    }
+
+    /**
+     * @test
+     *
+     * @covers ForeachIterator::getIterator
+     */
+    public function getIteratorForAggregateAndIteratorIsIterator()
+    {
+        $iterator = new EmptyIterator();
+
+        $actual = ForeachIterator::getIterator($iterator);
+        $this->assertInstanceOf('EmptyIterator', $actual);
+
+        $aggregate = $this->getMock('IteratorAggregate');
+        $aggregate->expects($this->once())
+            ->method('getIterator')
+            ->will($this->returnValue($iterator));
+
+        $actual = ForeachIterator::getIterator($aggregate);
+        $this->assertInstanceOf('EmptyIterator', $actual);
     }
 }
