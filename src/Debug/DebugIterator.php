@@ -46,7 +46,7 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
     {
         $this->event(__FUNCTION__ . '()');
         $current = parent::current();
-        $this->event(sprintf('parent::current() is %s', $this->varLabel($current)));
+        $this->event(sprintf('parent::current() is %s', DebugIterator::varLabel($current)));
         return $current;
     }
 
@@ -54,7 +54,7 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
     {
         $this->event(__FUNCTION__ . '()');
         $key = parent::key();
-        $this->event(sprintf('parent::key() is %s', $this->varLabel($key)));
+        $this->event(sprintf('parent::key() is %s', DebugIterator::varLabel($key)));
         return $key;
     }
 
@@ -71,7 +71,7 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
      * @return string
      * @is-trait DebugIterator::varLabel
      */
-    final protected function varLabel($var) {
+    final static function varLabel($var) {
         return is_scalar($var) ? var_export($var, true) : gettype($var);
     }
 
