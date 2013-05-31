@@ -46,7 +46,7 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
     {
         $this->event(__FUNCTION__ . '()');
         $current = parent::current();
-        $this->event(sprintf('parent::current() is %s', DebugIterator::varLabel($current)));
+        $this->event(sprintf('parent::current() is %s', DebugIterator::debugVarLabel($current)));
         return $current;
     }
 
@@ -54,7 +54,7 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
     {
         $this->event(__FUNCTION__ . '()');
         $key = parent::key();
-        $this->event(sprintf('parent::key() is %s', DebugIterator::varLabel($key)));
+        $this->event(sprintf('parent::key() is %s', DebugIterator::debugVarLabel($key)));
         return $key;
     }
 
@@ -69,22 +69,16 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
     /**
      * @param $var
      * @return string
-     * @is-trait DebugIterator::varLabel
      */
-    final static function varLabel($var) {
+    final static function debugVarLabel($var) {
         return is_scalar($var) ? var_export($var, true) : gettype($var);
     }
 
-    /**
-     * @param $event
-     * @throws RuntimeException
-     * @is-trait DebugIterator::event
-     */
-    final protected function event($event)
+    final static function debugEvent(Traversable $iterator, $index, $mode, $event)
     {
-        $message = sprintf("Iterating (%s): #%d %s", get_class($this->iterator), $this->index, $event);
+        $message = sprintf("Iterating (%s): #%d %s", get_class($iterator), $index, $event);
 
-        switch ($this->mode) {
+        switch ($mode) {
             case self::MODE_NOTICE:
                 trigger_error($message);
                 break;
@@ -97,6 +91,16 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
             default:
                 throw new RuntimeException($message);
         }
+    }
+
+    /**
+     * @param $event
+     * @throws RuntimeException
+     * @is-trait DebugIterator::event
+     */
+    final protected function event($event)
+    {
+        self::debugEvent($this, $this->index, $this->mode, $event);
     }
 }
 
