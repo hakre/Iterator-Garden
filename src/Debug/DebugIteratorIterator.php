@@ -55,7 +55,7 @@ class DebugIteratorIterator extends IteratorIterator implements DebugIteratorMod
      */
     final protected function varLabel($var)
     {
-        return is_scalar($var) ? var_export($var, TRUE) : gettype($var);
+        return DebugIterator::varLabel($var);
     }
 
     /**
