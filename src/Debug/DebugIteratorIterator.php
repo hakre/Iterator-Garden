@@ -55,7 +55,7 @@ class DebugIteratorIterator extends IteratorIterator implements DebugIteratorMod
      */
     final protected function varLabel($var)
     {
-        return DebugIterator::varLabel($var);
+        return DebugIterator::debugVarLabel($var);
     }
 
     /**
@@ -65,20 +65,6 @@ class DebugIteratorIterator extends IteratorIterator implements DebugIteratorMod
      */
     final protected function event($event)
     {
-        $message = sprintf("Iterating (%s): #%d %s", get_class($this->getInnerIterator()), $this->index, $event);
-
-        switch ($this->mode) {
-            case self::MODE_NOTICE:
-                trigger_error($message);
-                break;
-            case self::MODE_ECHO:
-                echo $message, "\n";
-                break;
-            case self::MODE_STDERR:
-                fputs(STDERR, $message . "\n");
-                break;
-            default:
-                throw new RuntimeException($message);
-        }
+        DebugIterator::debugEvent($this->getInnerIterator(), $this->index, $this->mode, $event);
     }
 }
