@@ -48,6 +48,14 @@ class DebugIteratorIterator extends IteratorIterator implements DebugIteratorMod
         $this->event('after parent::' . __FUNCTION__ . '()');
     }
 
+    public function debugGetIterationIndex() {
+        return $this->index;
+    }
+
+    public function debugEvent($event) {
+        $this->event($event);
+    }
+
     /**
      * @param $var
      * @return string
@@ -67,4 +75,5 @@ class DebugIteratorIterator extends IteratorIterator implements DebugIteratorMod
     {
         DebugIterator::debugEvent($this->getInnerIterator(), $this->index, $this->mode, $event);
     }
+
 }
