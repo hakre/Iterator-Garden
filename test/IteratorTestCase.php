@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013, 2014 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014, 2015 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,8 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Class IteratorTestCase
+ */
 abstract class IteratorTestCase extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Assert an Iterator is invalid and returns NULL for current() and key() as this is
+     * standard behavior.
+     *
+     * @param Iterator $iterator
+     */
+    protected function assertIteratorInvalidation(Iterator $iterator)
+    {
+        $this->assertIteratorInvalid($iterator);
+        // invalid iterator should be next()'ed as often as one wants to w/o changing valid()/current()/key() state
+        // this assertion does it twice only which should at least catch one-off cases and a little more.
+        $iterator->next();
+        $this->assertIteratorInvalid($iterator);
+        $iterator->next();
+        $this->assertIteratorInvalid($iterator);
+    }
+
+    private function assertIteratorInvalid(Iterator $iterator)
+    {
+        $this->assertFalse($iterator->valid());
+        $this->assertEquals(NULL, $iterator->current());
+        $this->assertEquals(NULL, $iterator->key());
+    }
+
     /**
      * Iteration test
      *
@@ -55,5 +82,13 @@ abstract class IteratorTestCase extends PHPUnit_Framework_TestCase
     {
         $actual = iterator_to_array($actual, FALSE);
         $this->assertEquals($expected, $actual, $message);
+    }
+
+    protected function assertIterationKeys(array $expected, Traversable $actual, $message = '')
+    {
+        $subject = new DecoratingIteratorDecorator($actual, function ($current) use ($actual) {
+            return $actual->key();
+        });
+        $this->assertIterationValues($expected, $subject, $message);
     }
 }
