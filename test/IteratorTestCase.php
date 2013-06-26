@@ -10,9 +10,14 @@ abstract class IteratorTestCase extends PHPUnit_Framework_TestCase
      *
      * @param Traversable $expected
      * @param Traversable $actual
+     * @param string      $message (optional)
      */
-    protected function assertIteration(Traversable $expected, Traversable $actual)
+    protected function assertIteration(Iterator $expected, Iterator $actual, $message = '')
     {
+        if ($message) {
+            $message .= "\n";
+        }
+
         $expected = $expected instanceof Iterator ? $expected : new IteratorIterator($expected);
         $actual   = $actual instanceof Iterator ? $actual : new IteratorIterator($actual);
 
@@ -23,18 +28,18 @@ abstract class IteratorTestCase extends PHPUnit_Framework_TestCase
         $index = -1;
         foreach ($both as $values) {
             $index++;
-            $this->assertSame($values[0], $values[1], sprintf("Values of Iteration #%d", $index));
+            $this->assertSame($values[0], $values[1], sprintf("%sValues of Iteration #%d", $message, $index));
             $keys = $both->key();
-            $this->assertSame($keys[0], $keys[1], sprintf("Keys of Iteration #%d", $index));
+            $this->assertSame($keys[0], $keys[1], sprintf("%sKeys of Iteration #%d", $message, $index));
         }
 
-        $this->assertFalse($expected->valid(), sprintf("Count mismatch: Expected Iterator still valid (#%d)", $index));
-        $this->assertFalse($actual->valid(), sprintf("Count mismatch: Actual Iterator still valid (#%d)", $index));
+        $this->assertFalse($expected->valid(), sprintf("%sCount mismatch: Expected Iterator still valid (#%d)", $message, $index));
+        $this->assertFalse($actual->valid(), sprintf("%sCount mismatch: Actual Iterator still valid (#%d)", $message, $index));
     }
 
-    protected function assertIterationValues(array $expected, Traversable $actual)
+    protected function assertIterationValues(array $expected, Traversable $actual, $message = '')
     {
         $actual = iterator_to_array($actual, FALSE);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected, $actual, $message);
     }
 }
