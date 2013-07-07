@@ -4,7 +4,7 @@
  */
 
 /**
- * Class FetchIterator
+ * Class FetchingIterator
  */
 class FetchingIterator implements Iterator
 {
