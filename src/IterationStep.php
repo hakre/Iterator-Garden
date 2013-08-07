@@ -53,6 +53,17 @@ class IterationStep
         );
     }
 
+    public static function createFromArray(array $array) {
+        $key   = key($array);
+        $valid = $key !== NULL;
+
+        return new self(
+            $valid,
+            $valid ? current($array) : $key,
+            $key
+        );
+    }
+
     public function getCurrent()
     {
         return $this->current;
