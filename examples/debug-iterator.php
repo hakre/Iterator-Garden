@@ -36,7 +36,10 @@ foreach ($it as $value) {
     echo $value, "\n";
 }
 
-$debug = new DebugIteratorDecorator($it);
+// $debug = new DebugIteratorDecorator($it);
+$debug = DebugIteratorEmitter::createFor($it)
+    ->registerOutput()
+    ->getDebugIterator();
 
 echo "\n== Debug Foreach Example ==\n";
 foreach ($debug as $value) {

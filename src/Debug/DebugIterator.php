@@ -67,11 +67,22 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
     }
 
     /**
+     * @param $event
+     * @throws RuntimeException
+     * @is-trait DebugIterator::event
+     */
+    final protected function event($event)
+    {
+        self::debugEvent($this->traversable, $this->index, $this->mode, $event);
+    }
+
+    /**
      * @param $var
      * @return string
      */
-    final static function debugVarLabel($var) {
-        return is_scalar($var) ? var_export($var, true) : gettype($var);
+    final static function debugVarLabel($var)
+    {
+        return is_scalar($var) ? var_export($var, TRUE) : gettype($var);
     }
 
     final static function debugEvent(Traversable $iterator, $index, $mode, $event)
@@ -79,28 +90,18 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
         $message = sprintf("Iterating (%s): #%d %s", get_class($iterator), $index, $event);
 
         switch ($mode) {
-            case self::MODE_NOTICE:
+            case DebugIteratorModes::MODE_NOTICE:
                 trigger_error($message);
                 break;
-            case self::MODE_ECHO:
+            case DebugIteratorModes::MODE_ECHO:
                 echo $message, "\n";
                 break;
-            case self::MODE_STDERR:
+            case DebugIteratorModes::MODE_STDERR:
                 fputs(STDERR, $message . "\n");
                 break;
             default:
                 throw new RuntimeException($message);
         }
-    }
-
-    /**
-     * @param $event
-     * @throws RuntimeException
-     * @is-trait DebugIterator::event
-     */
-    final protected function event($event)
-    {
-        self::debugEvent($this, $this->index, $this->mode, $event);
     }
 }
 
