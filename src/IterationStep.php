@@ -53,7 +53,7 @@ class IterationStep
         );
     }
 
-    public static function createFromArray(array $array) {
+    public static function createFromArray(array &$array) {
         $key   = key($array);
         $valid = $key !== NULL;
 
