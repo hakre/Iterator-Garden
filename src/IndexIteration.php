@@ -27,8 +27,8 @@ class IndexIteration extends IteratorIterator
     private $index;
 
     public function rewind() {
-        $this->index = 0;
         parent::rewind();
+        $this->index = parent::valid() ? 0 : NULL;
     }
 
     public function next() {
