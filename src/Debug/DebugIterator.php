@@ -23,8 +23,14 @@
 class DebugIterator extends IteratorDecorator implements Iterator, DebugIteratorModes
 {
     private $mode = self::MODE_ECHO;
+    private $label;
 
     private $index;
+
+    public function __construct(Iterator $iterator, $label = NULL) {
+        $this->label = $label;
+        parent::__construct($iterator);
+    }
 
     public function rewind()
     {
@@ -73,7 +79,7 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
      */
     final protected function event($event)
     {
-        self::debugEvent($this->traversable, $this->index, $this->mode, $event);
+        self::debugEvent($this, $this->index, $this->mode, $event);
     }
 
     /**
@@ -85,9 +91,17 @@ class DebugIterator extends IteratorDecorator implements Iterator, DebugIterator
         return is_scalar($var) ? var_export($var, TRUE) : gettype($var);
     }
 
-    final static function debugEvent(Traversable $iterator, $index, $mode, $event)
+    final static function debugEvent(DebugIterator $debug, $index, $mode, $event)
     {
-        $message = sprintf("Iterating (%s): #%d %s", get_class($iterator), $index, $event);
+        if ($label = $debug->label) {
+            $label .= " ";
+        } else {
+            $label = 'unnamed ';
+        }
+
+        $iterator = $debug->traversable;
+
+        $message = sprintf("Iterating %s(%s): #%d %s", $label, get_class($iterator), $index, $event);
 
         switch ($mode) {
             case DebugIteratorModes::MODE_NOTICE:
