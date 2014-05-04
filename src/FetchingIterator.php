@@ -12,13 +12,19 @@ class FetchingIterator implements Iterator
     private $index;
     private $current;
     private $valid;
+    private $stopValue;
 
-    public function __construct($callback)
+    /**
+     * @param Callable $callback
+     * @param mixed $stopValue (optional)
+     */
+    public function __construct($callback, $stopValue = NULL)
     {
         if (!is_callable($callback, TRUE)) {
             throw new InvalidArgumentException('Invalid callback given.');
         }
         $this->callback = $callback;
+        $this->stopValue = $stopValue;
     }
 
     public function rewind()
@@ -50,6 +56,6 @@ class FetchingIterator implements Iterator
     protected function fetchNext()
     {
         $this->index++;
-        $this->valid = NULL !== $this->current = call_user_func($this->callback);
+        $this->valid = $this->stopValue !== $this->current = call_user_func($this->callback);
     }
 }

@@ -35,6 +35,11 @@ class FetchingIteratorTest extends IteratorTestCase
             new FetchingIterator($this->createCallbackWithValues($values))
         );
 
+        $this->assertIterationValues(
+            array('a'),
+            new FetchingIterator($this->createCallbackWithValues($values), 'b')
+        );
+
         $this->assertIteration(
             new ArrayIterator($values),
             new FetchingIterator($this->createCallbackWithValues($values))
