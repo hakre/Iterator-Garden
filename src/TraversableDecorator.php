@@ -17,8 +17,13 @@ class TraversableDecorator implements Iterator
      */
     protected $traversable;
 
-    public function __construct(Traversable $traversable)
+    /**
+     * @param Traversable $traversable (optional)
+     */
+    public function __construct(Traversable $traversable = NULL)
     {
+        $traversable || $traversable = new EmptyIterator();
+
         $this->traversable =
             $traversable instanceof Iterator
                 ? $traversable

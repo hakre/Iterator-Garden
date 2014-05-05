@@ -3,6 +3,9 @@
  * Iterator Garden
  */
 
+/**
+ * Class TraversableDecoratorTest
+ */
 class TraversableDecoratorTest extends IteratorTestCase
 {
     public function testDecoratorWithTraversal()
@@ -15,5 +18,11 @@ class TraversableDecoratorTest extends IteratorTestCase
         $array     = iterator_to_array($subject, FALSE);
 
         $this->assertIterationValues($array, $decorated);
+    }
+
+    public function testEmptyDecoration()
+    {
+        $decorated = new TraversableDecorator();
+        $this->assertIterationValues(array(), $decorated);
     }
 }
