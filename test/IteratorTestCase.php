@@ -5,8 +5,17 @@
 
 abstract class IteratorTestCase extends PHPUnit_Framework_TestCase
 {
-    protected function assertIteration(Iterator $expected, Iterator $actual)
+    /**
+     * Iteration test
+     *
+     * @param Traversable $expected
+     * @param Traversable $actual
+     */
+    protected function assertIteration(Traversable $expected, Traversable $actual)
     {
+        $expected = $expected instanceof Iterator ? $expected : new IteratorIterator($expected);
+        $actual   = $actual instanceof Iterator ? $actual : new IteratorIterator($actual);
+
         $both = new MultipleIterator(MultipleIterator::MIT_NEED_ALL);
         $both->attachIterator($expected);
         $both->attachIterator($actual);
