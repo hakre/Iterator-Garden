@@ -12,7 +12,7 @@ abstract class IteratorTestCase extends PHPUnit_Framework_TestCase
      * @param Traversable $actual
      * @param string      $message (optional)
      */
-    protected function assertIteration(Iterator $expected, Iterator $actual, $message = '')
+    protected function assertIteration(Traversable $expected, Traversable $actual, $message = '')
     {
         if ($message) {
             $message .= "\n";
