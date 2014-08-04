@@ -32,6 +32,8 @@ class DualRecursiveDirectoryIterator extends DualDirectoryIterator implements Re
             $this->flags
         );
 
+        $child->info_class = $this->info_class;
+
         $subPath = $this->subPath;
 
         $child->subPath = strlen($subPath)

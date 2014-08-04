@@ -7,6 +7,10 @@
  * Class FilesystemStubIterator
  *
  * A FilesystemIterator of which the directory must not exists.
+ *
+ * TODO Refactor out an SplFileInfo decorator because the DualDirectoryIterator within its current
+ *      path of inheritance is a FilesystemIterator -> DirectoryIterator -> SplFileInfo as well
+ *      as which it yet does not qualify. This could delegate some boilerplate code into the decorator, too.
  */
 class FilesystemStubIterator extends FilesystemIterator
 {
@@ -51,6 +55,7 @@ class FilesystemStubIterator extends FilesystemIterator
         if ($this->fileInfo) {
             return $this->fileInfo;
         }
+
         $info = new SplFileInfo($this->path);
 
         if ($class_name !== NULL) {
