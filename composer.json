@@ -1,0 +1,21 @@
+{
+    "name": "hakre/iterator-garden",
+    "description": "Examples of Iterators. Let Iterators grow like flowers in the garden.",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "hakre",
+            "email": "hanskrentel@yahoo.de"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*"
+    },
+    "autoload": {
+        "files": ["src/autoload.php"]
+    },
+    "autoload-dev": {
+        "files": ["test/bootstrap.php"]
+    }
+}
