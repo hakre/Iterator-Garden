@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Iterator Garden
  */
 

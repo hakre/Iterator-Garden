@@ -1,7 +1,8 @@
 <?php
-/**
+/*
  * Iterator Garden
  */
+
 
 /**
  * Class DebugIteratorEmitter

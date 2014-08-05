@@ -1,4 +1,8 @@
 <?php
+/*
+ * Iterator Garden
+ */
+
 /**
  * Class DebugIterator
  */

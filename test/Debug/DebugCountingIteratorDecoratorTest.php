@@ -1,10 +1,10 @@
 <?php
-/**
- *Iterator Garden
+/*
+ * Iterator Garden
  */
 
-class DebugCountingIteratorDecoratorTest extends IteratorTestCase {
-
+class DebugCountingIteratorDecoratorTest extends IteratorTestCase
+{
     /**
      * @test
      */

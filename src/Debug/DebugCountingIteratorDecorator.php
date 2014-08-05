@@ -1,6 +1,6 @@
 <?php
-/**
- * IteratorGarden
+/*
+ * Iterator Garden
  */
 
 class DebugCountingIteratorDecorator extends IteratorDecorator
