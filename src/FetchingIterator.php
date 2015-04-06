@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013, 1014 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
