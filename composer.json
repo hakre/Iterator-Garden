@@ -13,9 +13,9 @@
         "phpunit/phpunit": "4.1.*"
     },
     "autoload": {
-        "files": ["src/autoload.php"]
+        "classmap": ["src/"]
     },
     "autoload-dev": {
-        "files": ["test/bootstrap.php"]
+        "classmap": ["test/IteratorTestCase.php", "test/ForeachIteratorBaseTest.php"]
     }
 }
