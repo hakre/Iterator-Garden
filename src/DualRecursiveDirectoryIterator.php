@@ -22,6 +22,9 @@
  */
 class DualRecursiveDirectoryIterator extends DualDirectoryIterator implements RecursiveIterator
 {
+    /**
+     * @var string
+     */
     protected $subPath;
 
     public function hasChildren()
@@ -50,27 +53,39 @@ class DualRecursiveDirectoryIterator extends DualDirectoryIterator implements Re
 
         $subPath = $this->subPath;
 
-        $child->subPath = strlen($subPath)
-            ? $subPath . '/' . $fileName
-            : $fileName;
-        ;
+        $child->subPath = $this->makeSubPathname($subPath, $fileName);
 
         return $child;
     }
 
+    /**
+     * @return string
+     */
     public function getSubPath()
     {
         return $this->subPath;
     }
 
+    /**
+     * @return string
+     */
     public function getSubPathname()
     {
         $fileName = $this->current->getFilename();
         $subPath  = $this->subPath;
 
+        return $this->makeSubPathname($subPath, $fileName);
+    }
+
+    /**
+     * @param string $subPath
+     * @param string $fileName
+     * @return string
+     */
+    private function makeSubPathname($subPath, $fileName)
+    {
         return strlen($subPath)
             ? $subPath . '/' . $fileName
-            : $fileName
-        ;
+            : $fileName;
     }
 }
