@@ -220,7 +220,7 @@ class DualDirectoryIterator extends FilesystemIterator
     }
 
     /**
-     * @return string[] array of pathnames (of which not all may exist)
+     * @return string[] array of path-names (of which not all may exist)
      */
     public function getPathnames()
     {

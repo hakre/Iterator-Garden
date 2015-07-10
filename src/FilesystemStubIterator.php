@@ -28,7 +28,7 @@
  */
 class FilesystemStubIterator extends FilesystemIterator
 {
-    private $flags;
+    protected $flags;
 
     private $path;
 
