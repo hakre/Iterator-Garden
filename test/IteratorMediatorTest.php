@@ -42,20 +42,22 @@ class IteratorMediatorTest extends PHPUnit_Framework_TestCase
         $range    = new RangeIterator(1, 3);
         $iterator = new IteratorMediator($range);
 
-        $assertListener = function (Mediator $mediator, $type, $extra = NULL) {
-            $mediator->addListener($type, function ($eventTarget, $args) use (&$extraCall, $mediator) {
+        $assertions = $this;
+
+        $assertListener = function (Mediator $mediator, $type, $extra = NULL) use ($assertions) {
+            $mediator->addListener($type, function ($eventTarget, $args) use (&$extraCall, $mediator, $assertions) {
                 if ($extraCall) {
                     return $extraCall($eventTarget, $args);
                 }
-                $this->addToAssertionCount(1);
-                $this->assertInstanceOf('Mediator', $eventTarget);
-                $this->assertInternalType('array', $args);
-                $this->assertNotSame($eventTarget, $mediator);
-                $this->assertNotEquals($eventTarget, $mediator);
+                $assertions->addToAssertionCount(1);
+                $assertions->assertInstanceOf('Mediator', $eventTarget);
+                $assertions->assertInternalType('array', $args);
+                $assertions->assertNotSame($eventTarget, $mediator);
+                $assertions->assertNotEquals($eventTarget, $mediator);
             });
-            $numAssertions = $this->getNumAssertions();
+            $numAssertions = $assertions->getNumAssertions();
             $mediator->notify($type);
-            $this->assertGreaterThan($numAssertions, $this->getNumAssertions());
+            $assertions->assertGreaterThan($numAssertions, $assertions->getNumAssertions());
 
             $extraCall = $extra;
         };

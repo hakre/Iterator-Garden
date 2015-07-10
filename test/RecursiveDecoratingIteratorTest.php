@@ -34,7 +34,7 @@ class RecursiveDecoratingIteratorTest extends IteratorTestCase
     private function createSubject($traversable = NULL, $decorator = NULL, $mode = NULL)
     {
         if ($traversable === NULL) {
-            $traversable = ['1.' => ['a' => 'Entry 1.a)', 'b' => 'Entry 1.b)']];
+            $traversable = array('1.' => array('a' => 'Entry 1.a)', 'b' => 'Entry 1.b)'));
         }
 
         if (is_array($traversable)) {
@@ -65,8 +65,8 @@ class RecursiveDecoratingIteratorTest extends IteratorTestCase
 
     public function testDecoration()
     {
-        $array    = [[1 => '0.1.']];
-        $expected = $array + [1 => '[0.1.]'];
+        $array    = array(array(1 => '0.1.'));
+        $expected = $array + array(1 => '[0.1.]');
 
         $it     = $this->createSubject($array);
         $rit    = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::SELF_FIRST);
@@ -77,51 +77,52 @@ class RecursiveDecoratingIteratorTest extends IteratorTestCase
 
     public function testDecorationOnLeafsOnly()
     {
-        $array = [[1 => '0.1.', 2 => '0.2.']];
-        $count = 0;
+        $array = array(array(1 => '0.1.', 2 => '0.2.'));
+        $assertions = $this;
 
-        $it = $this->createSubject($array, function ($leaf) use (&$count) {
-            $count++;
-            $this->assertInternalType('string', $leaf, 'Leaf is a string');
+        $it = $this->createSubject($array, function ($leaf) use ($assertions) {
+            $assertions->addToAssertionCount(1);
+            $assertions->assertInternalType('string', $leaf, 'Leaf is a string');
             return $leaf;
         });
 
         $rit = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::SELF_FIRST);
         iterator_to_array($rit);
-        $this->assertEquals(2, $count);
+        $this->assertEquals(2, $assertions->getNumAssertions());
     }
 
     public function testDecorationOnChildrenOnly()
     {
-        $count = 0;
+        $assertions = $this;
 
-        $it = $this->createSubject(NULL, function ($children) use (&$count) {
-            $count++;
-            $this->assertInternalType('array', $children, 'Children are array');
+        $it = $this->createSubject(NULL, function ($children) use ($assertions) {
+            $assertions->addToAssertionCount(1);
+            $assertions->assertInternalType('array', $children, 'Children are array');
             return $children;
         }, RecursiveDecoratingIterator::DECORATE_CHILDREN);
 
         $rit = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::SELF_FIRST);
         iterator_to_array($rit);
-        $this->assertEquals(1, $count);
+        $this->assertEquals(1, $assertions->getNumAssertions());
     }
 
     public function testDecorationOnChildrenAndLeafs()
     {
-        $array = [1 => [1, 2], 2 => [3,4], 3 => [5]];
-        $count = [0, 0];
+        $array = array(1 => array(1, 2), 2 => array(3,4), 3 => array(5));
+        $count = array(0, 0);
+        $assertions = $this;
 
-        $it = $this->createSubject($array, function ($childrenOrLeaf) use (&$rit, &$count) {
+        $it = $this->createSubject($array, function ($childrenOrLeaf) use (&$rit, &$count, $assertions) {
                 /** @var RecursiveIteratorIterator $rit */
                 $children = $rit->getSubIterator()->hasChildren();
                 $expected = $children ? 'array' : 'int';
-                $this->assertInternalType($expected, $childrenOrLeaf, 'Correct Type');
+                $assertions->assertInternalType($expected, $childrenOrLeaf, 'Correct Type');
                 $count[$children]++;
                 return $childrenOrLeaf;
             }, RecursiveDecoratingIterator::DECORATE_NODES);
 
         $rit = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::SELF_FIRST);
         iterator_to_array($rit);
-        $this->assertEquals([5, 3], $count);
+        $this->assertEquals(array(5, 3), $count);
     }
 }

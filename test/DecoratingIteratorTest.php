@@ -28,16 +28,16 @@ class DecoratingIteratorTest extends IteratorTestCase
     }
 
     public function testCallbackDecorator() {
-        $called = 0;
-        $it = new DecoratingIterator(new ArrayIterator(array(1)), function($current) use (&$called) {
-            $this->assertEquals(1, $current);
-            $called++;
+        $assertions = $this;
+        $it = new DecoratingIterator(new ArrayIterator(array(1)), function($current) use (&$called, $assertions) {
+            $assertions->assertEquals(1, $current);
+            $assertions->addToAssertionCount(1);
             return $current;
         });
 
         iterator_to_array($it);
 
-        $this->assertSame(1, $called);
+        $this->assertSame(1, $this->getNumAssertions());
     }
 
     public function testCallbackClass() {

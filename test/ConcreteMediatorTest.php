@@ -40,9 +40,10 @@ class ConcreteMediatorTest extends PHPUnit_Framework_TestCase
     {
         $mediator = new ConcreteMediator();
 
-        $callback = function (Mediator $eventTarget, $args) use ($mediator) {
-            $this->assertSame($mediator, $eventTarget);
-            $this->addToAssertionCount(1);
+        $assertions = $this;
+        $callback = function (Mediator $eventTarget, $args) use ($mediator, $assertions) {
+            $assertions->assertSame($mediator, $eventTarget);
+            $assertions->addToAssertionCount(1);
         };
 
         $this->assertEquals(0, $this->getNumAssertions());
