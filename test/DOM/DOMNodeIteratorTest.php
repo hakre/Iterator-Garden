@@ -39,6 +39,8 @@ class DOMNodeIteratorTest extends IteratorTestCase
      */
     function traversal()
     {
+        if (defined('HHVM_VERSION')) $this->markTestSkipped('skipped on HHVM');
+
         $doc = new DOMDocument();
         $doc->loadXML('<doc><parent><child>text</child></parent><parent><child>text</child></parent></doc>');
         $node    = $doc;
