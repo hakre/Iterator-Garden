@@ -22,7 +22,7 @@
  *
  * @link http://chat.stackoverflow.com/transcript/message/9641987#9641987
  */
-require(__DIR__ . '/../src/autoload.php');
+require(__DIR__ . '/../vendor/autoload.php');
 
 $array = array(
     array(1, 3, 4),

@@ -22,7 +22,7 @@
  * how iterators work.
  */
 
-require('../src/autoload.php');
+require(__DIR__ . '/../vendor/autoload.php');
 
 function_exists('xdebug_disable') && xdebug_disable();
 ini_set('log_errors', 0);

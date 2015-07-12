@@ -1,0 +1,51 @@
+
+== Standard Foreach Example ==
+a
+b
+c
+
+== Debug Foreach Example ==
+Iterating (ArrayIterator): #0 rewind
+Iterating (ArrayIterator): #0 valid
+Iterating (ArrayIterator): #0 current
+a
+Iterating (ArrayIterator): #1 next
+Iterating (ArrayIterator): #1 valid
+Iterating (ArrayIterator): #1 current
+b
+Iterating (ArrayIterator): #2 next
+Iterating (ArrayIterator): #2 valid
+Iterating (ArrayIterator): #2 current
+c
+Iterating (ArrayIterator): #3 next
+Iterating (ArrayIterator): #3 valid
+
+== Debug Foreach W/ Key Example ==
+Iterating (ArrayIterator): #0 rewind
+Iterating (ArrayIterator): #0 valid
+Iterating (ArrayIterator): #0 current
+Iterating (ArrayIterator): #0 key
+a
+Iterating (ArrayIterator): #1 next
+Iterating (ArrayIterator): #1 valid
+Iterating (ArrayIterator): #1 current
+Iterating (ArrayIterator): #1 key
+b
+Iterating (ArrayIterator): #2 next
+Iterating (ArrayIterator): #2 valid
+Iterating (ArrayIterator): #2 current
+Iterating (ArrayIterator): #2 key
+c
+Iterating (ArrayIterator): #3 next
+Iterating (ArrayIterator): #3 valid
+
+== Iterator Count Example ==
+Iterating (ArrayIterator): #0 rewind
+Iterating (ArrayIterator): #0 valid
+Iterating (ArrayIterator): #1 next
+Iterating (ArrayIterator): #1 valid
+Iterating (ArrayIterator): #2 next
+Iterating (ArrayIterator): #2 valid
+Iterating (ArrayIterator): #3 next
+Iterating (ArrayIterator): #3 valid
+Count: 3

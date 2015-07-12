@@ -1,0 +1,48 @@
+00:  3
+01:  4
+02:  5
+03:  6
+04:  7
+05:  8
+06:  9
+07: 10
+08: 11
+09: 12
+10: 13
+11: 14
+12: 15
+13: 16
+14: 17
+15: 18
+16: 19
+17: 20
+18: 21
+19: 22
+20: 23
+Iterating (SeekableRangeIterator): #0 rewind
+Iterating (SeekableRangeIterator): #0 seek 1988
+Iterating (SeekableRangeIterator): #0 valid
+Iterating (SeekableRangeIterator): #0 current
+Iterating (SeekableRangeIterator): #0 key
+00:  2
+Iterating (SeekableRangeIterator): #1 next
+Iterating (SeekableRangeIterator): #1 valid
+Iterating (SeekableRangeIterator): #1 current
+Iterating (SeekableRangeIterator): #1 key
+1989: 1991
+Iterating (SeekableRangeIterator): #2 next
+Iterating (SeekableRangeIterator): #2 valid
+Iterating (SeekableRangeIterator): #2 current
+Iterating (SeekableRangeIterator): #2 key
+1990: 1992
+Iterating (SeekableRangeIterator): #3 next
+Iterating (SeekableRangeIterator): #3 valid
+Iterating (SeekableRangeIterator): #3 current
+Iterating (SeekableRangeIterator): #3 key
+1991: 1993
+Iterating (SeekableRangeIterator): #4 next
+Iterating (SeekableRangeIterator): #4 valid
+Iterating (SeekableRangeIterator): #4 current
+Iterating (SeekableRangeIterator): #4 key
+1992: 1994
+Iterating (SeekableRangeIterator): #5 next

@@ -6,7 +6,10 @@
         >
     <testsuites>
         <testsuite name="IteratorGarden Main Test Suite">
-            <directory>test</directory>
+            <directory suffix="Test.php">test</directory>
+        </testsuite>
+        <testsuite name="PHPT">
+            <directory suffix=".phpt">test</directory>
         </testsuite>
     </testsuites>
     <filter>

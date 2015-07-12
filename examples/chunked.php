@@ -23,7 +23,7 @@
  * IteratorChunk as stand-alone allows to get a chunk out of an iteration.
  */
 
-require('../src/autoload.php');
+require(__DIR__ . '/../vendor/autoload.php');
 
 $range = new RangeIterator(1, 10);
 

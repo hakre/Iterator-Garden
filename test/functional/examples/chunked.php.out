@@ -1,0 +1,29 @@
+chunks as nested foreach fixed size:
+ chunk #0:
+  0 => 1
+  1 => 2
+  2 => 3
+ chunk #1:
+  3 => 4
+  4 => 5
+  5 => 6
+ chunk #2:
+  6 => 7
+  7 => 8
+  8 => 9
+ chunk #3:
+  9 => 10
+diverse chunks of different size:
+ chunk #0 (3):
+  0 => 1
+  1 => 2
+  2 => 3
+ chunk #1 (5):
+  3 => 4
+  4 => 5
+  5 => 6
+  6 => 7
+  7 => 8
+ chunk #2 (3):
+  8 => 9
+  9 => 10
