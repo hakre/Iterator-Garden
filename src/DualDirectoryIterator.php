@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013, 2014 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014, 2015 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -58,11 +58,11 @@ class DualDirectoryIterator extends FilesystemIterator
     /**
      * @param string|FilesystemIterator $pathA
      * @param string|FilesystemIterator $pathB
-     * @param int $flags
+     * @param int                       $flags
      */
-    public function __construct($pathA, $pathB, $flags = NULL)
+    public function __construct($pathA, $pathB, $flags = null)
     {
-        if ($flags === NULL) {
+        if ($flags === null) {
             $flags = self::KEY_AS_PATHNAME | self::CURRENT_AS_FILEINFO | self::SKIP_DOTS;
         }
 
@@ -73,8 +73,12 @@ class DualDirectoryIterator extends FilesystemIterator
     }
 
     /**
+     * Create a FileSystemIterator out of a path (directory). Does this with a certain amount of validation and will
+     * return a FileSystemStubIterator in case the path is not a directory (for example, it does not exists).
+     *
      * @param  string|FilesystemIterator $path
-     * @param  int $flags to be set on new inner iterator returned
+     * @param  int                       $flags to be set on new inner iterator returned
+     *
      * @throws InvalidArgumentException
      * @return FilesystemIterator|FilesystemStubIterator
      */
@@ -82,12 +86,8 @@ class DualDirectoryIterator extends FilesystemIterator
     {
         if ($path instanceof FilesystemIterator) {
             $path->setFlags($flags);
-            return $path;
-        }
 
-        if (!is_string($path)) {
-            $message = sprintf('path should be string, %s given', gettype($path));
-            trigger_error($message);
+            return $path;
         }
 
         if ($path instanceof SplFileInfo) {
@@ -107,16 +107,29 @@ class DualDirectoryIterator extends FilesystemIterator
         return new FilesystemStubIterator($path, $flags);
     }
 
+    /**
+     * @return int The integer value of the set flags.
+     *
+     * @see FilesystemIterator::getFlags()
+     * @see FilesystemIterator
+     */
     public function getFlags()
     {
         return $this->flags;
     }
 
-    public function setFlags($flags = NULL)
+    /**
+     * @param int $flags [optional]
+     *
+     * note: even this parameter is optional, it is only because otherwise extending the parent class would give an
+     * inheritance error. the parent class actually requires the paramter, this seems to be an issue with the
+     * interface.
+     */
+    public function setFlags($flags = null)
     {
-        $this->flags = $flags;
+        parent::setFlags((int) $flags);
 
-        parent::setFlags($flags);
+        $this->flags = parent::getFlags();
     }
 
     public function rewind()
@@ -198,7 +211,7 @@ class DualDirectoryIterator extends FilesystemIterator
     protected function areEqual()
     {
         if (!$this->pathA->valid() || !$this->pathB->valid()) {
-            return FALSE;
+            return false;
         }
 
         $comparison = $this->compareBothFilename();
@@ -225,7 +238,7 @@ class DualDirectoryIterator extends FilesystemIterator
     public function getPathnames()
     {
         $separator = $this->flags & self::UNIX_PATHS ? '/' : DIRECTORY_SEPARATOR;
-        $fileName = $this->current->getFilename();
+        $fileName  = $this->current->getFilename();
 
         return array(
             $this->pathA->getPath() . $separator . $fileName,
@@ -268,7 +281,8 @@ class DualDirectoryIterator extends FilesystemIterator
     /**
      * @return FilesystemIterator[]
      */
-    public function getInnerIterators() {
+    public function getInnerIterators()
+    {
         return array(
             $this->pathA,
             $this->pathB,
@@ -280,9 +294,9 @@ class DualDirectoryIterator extends FilesystemIterator
      *
      * @param string $class_name (optional) of an SplFileInfo derived class to use
      */
-    public function setInfoClass($class_name = NULL)
+    public function setInfoClass($class_name = null)
     {
-        if ($class_name === NULL) {
+        if (null === $class_name) {
             $class_name = 'SplFileInfo';
         }
 
@@ -300,9 +314,9 @@ class DualDirectoryIterator extends FilesystemIterator
      *
      * @return SplFileInfo object created for the file
      */
-    public function getFileInfo($class_name = NULL)
+    public function getFileInfo($class_name = null)
     {
-        if ($class_name === NULL) {
+        if (null === $class_name) {
             $class_name = $this->info_class;
         }
 
@@ -314,11 +328,12 @@ class DualDirectoryIterator extends FilesystemIterator
     /**
      * @param string $class_name (optional) of an SplFileInfo derived class to use
      *
-     * @return SplFileInfo[] array of SplFileInfo-s (of which may not all files exist)
+     * @return SplFileInfo[] array of SplFileInfo-s (of which may not all files exist), if one of the path iterators
+     *                       is invalid, the array-entry will be null.
      */
-    public function getFileInfos($class_name = NULL)
+    public function getFileInfos($class_name = null)
     {
-        if ($class_name === NULL) {
+        if (null === $class_name) {
             $class_name = $this->info_class;
         }
 
@@ -326,7 +341,7 @@ class DualDirectoryIterator extends FilesystemIterator
 
         $fileInfos = array();
         foreach ($paths as $path) {
-            $fileInfos[] = $path->getFileInfo($class_name);
+            $fileInfos[] = $path->valid() ? $path->getFileInfo($class_name) : null;
         }
 
         return $fileInfos;
@@ -337,9 +352,9 @@ class DualDirectoryIterator extends FilesystemIterator
      *
      * @return SplFileInfo object for the parent path of the file
      */
-    public function getPathInfo($class_name = NULL)
+    public function getPathInfo($class_name = null)
     {
-        if ($class_name === NULL) {
+        if (null === $class_name) {
             $class_name = $this->info_class;
         }
 
