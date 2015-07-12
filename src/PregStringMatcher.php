@@ -29,15 +29,16 @@ class PregStringMatcher implements StringMatcher
 
     function __construct($pattern)
     {
-        if (FALSE === preg_match($pattern, "")) {
-            throw new InvalidArgumentException(sprintf('Invalid pattern %s', var_export($pattern, TRUE)));
+        if (false === preg_match($pattern, "")) {
+            throw new InvalidArgumentException(sprintf('Invalid pattern %s', var_export($pattern, true)));
         }
         $this->pattern = $pattern;
     }
 
     /**
-     * @param $string
+     * @param     $string
      * @param int $offset
+     *
      * @return string|null
      */
     public function match($string, $offset = 0)
@@ -45,11 +46,13 @@ class PregStringMatcher implements StringMatcher
         if ($this->result = preg_match($this->pattern, $string, $matches, PREG_OFFSET_CAPTURE, $offset)) {
             $this->offset  = $matches[0][1];
             $this->matches = $matches;
+
             return $matches[0][0];
         } else {
-            $this->offset  = NULL;
-            $this->matches = NULL;
-            return NULL;
+            $this->offset  = null;
+            $this->matches = null;
+
+            return null;
         }
     }
 
@@ -66,14 +69,15 @@ class PregStringMatcher implements StringMatcher
      *
      * @return string|null
      */
-    public function getMatch($index = NULL)
+    public function getMatch($index = null)
     {
-        if ($index === NULL) {
+        if ($index === null) {
             $index = 0;
         }
         if (!isset($this->matches[$index])) {
-            return NULL;
+            return null;
         }
+
         return $this->matches[$index][0];
     }
 }

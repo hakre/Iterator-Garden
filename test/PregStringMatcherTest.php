@@ -36,9 +36,19 @@ class PregStringMatcherTest extends PHPUnit_Framework_TestCase
      * @expectedException PHPUnit_Framework_Error_Warning
      * @expectedExceptionMessage Empty regular expression
      */
-    public function exceptionInvalidPattern()
+    public function errorInvalidPattern()
     {
         new PregStringMatcher("");
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid pattern '
+     */
+    public function exceptionInvalidPattern()
+    {
+        @new PregStringMatcher("");
     }
 
     /**
@@ -71,9 +81,30 @@ class PregStringMatcherTest extends PHPUnit_Framework_TestCase
             static $offset = 0;
             $result = $matcher->match($subject, $offset);
             $offset = $matcher->getOffset() + strlen($result);
+
             return $result;
         });
 
         $this->assertEquals($results, iterator_to_array($iterator));
+    }
+
+    /**
+     * @test
+     *
+     * @link https://tools.ietf.org/html/rfc3986#appendix-B
+     */
+    public function getMatch()
+    {
+        $uri = 'http://www.ics.uci.edu/pub/ietf/uri/#Related';
+
+        $matcher = new PregStringMatcher("~^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?~");
+        $matcher->match($uri);
+        $this->assertSame($uri, $matcher->getMatch());
+        $this->assertNull($matcher->getMatch(10));
+
+        $this->assertSame('http:', $matcher->getMatch(1));
+        $this->assertSame('#Related', $matcher->getMatch(8));
+        $this->assertSame('Related', $matcher->getMatch(9));
+
     }
 }
