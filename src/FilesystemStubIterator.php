@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013, 2014 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014, 2015 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,20 +28,29 @@
  */
 class FilesystemStubIterator extends FilesystemIterator
 {
+    /**
+     * @var int FilesystemIterator flags
+     * @see FilesystemIterator
+     */
     protected $flags;
 
+    /**
+     * @var string path to iterate (which is also the only one iteration)
+     */
     private $path;
 
-    private $fileInfo;
-
-    public function __construct($path, $flags = NULL)
+    /**
+     * @param string $path
+     * @param int    $flags [optional]
+     */
+    public function __construct($path, $flags = null)
     {
-        if ($flags === NULL) {
+        if ($flags === null) {
             $flags = self::KEY_AS_PATHNAME | self::CURRENT_AS_FILEINFO | self::SKIP_DOTS;
         }
 
         $this->path  = $path;
-        $this->flags = $flags;
+        $this->flags = (int)$flags;
     }
 
     public function getExtension()
@@ -49,14 +58,17 @@ class FilesystemStubIterator extends FilesystemIterator
         return pathinfo($this->path, PATHINFO_EXTENSION);
     }
 
+    /**
+     * @return int
+     */
     public function getFlags()
     {
         return $this->flags;
     }
 
-    public function setFlags($flags = NULL)
+    public function setFlags($flags = null)
     {
-        $this->flags = $flags;
+        $this->flags = (int)$flags;
     }
 
     public function getFilename()
@@ -64,19 +76,15 @@ class FilesystemStubIterator extends FilesystemIterator
         return basename($this->path);
     }
 
-    public function getFileInfo($class_name = NULL)
+    public function getFileInfo($class_name = null)
     {
-        if ($this->fileInfo) {
-            return $this->fileInfo;
-        }
-
         $info = new SplFileInfo($this->path);
 
-        if ($class_name !== NULL) {
+        if ($class_name !== null) {
             $info = $info->getFileInfo($class_name);
         }
 
-        return $this->fileInfo = $info;
+        return $info;
     }
 
     public function getPath()
@@ -176,26 +184,41 @@ class FilesystemStubIterator extends FilesystemIterator
 
     public function __toString()
     {
-        return (string) $this->path;
+        return (string)$this->path;
     }
 
-    public function getBasename($suffix = NULL)
+    public function getBasename($suffix = null)
     {
         return $this->getFileInfo()->getBasename($suffix);
     }
 
-    public function getPathInfo($class_name = NULL)
+    /**
+     * @param string $class_name [optional] Name of an SplFileInfo derived class to use.
+     *
+     * @return SplFileInfo
+     */
+    public function getPathInfo($class_name = null)
     {
-        if ($class_name === NULL) {
-            return $this->getFileInfo()->getPathInfo();
+        $info = $this->getFileInfo();
+        if ($class_name !== null) {
+            $info->setInfoClass($class_name);
         }
 
-        return $this->getFileInfo()->getPathInfo($class_name);
+        return $info->getPathInfo();
     }
 
-    public function openFile($open_mode = 'r', $use_include_path = FALSE, $context = NULL)
+    /**
+     * @param string     $open_mode
+     * @param bool|false $use_include_path
+     * @param null       $context
+     *
+     * TODO the stub can't be opened, so this code is wong
+     *
+     * @return SplFileObject
+     */
+    public function openFile($open_mode = 'r', $use_include_path = false, $context = null)
     {
-        if ($context === NULL) {
+        if ($context === null) {
             return $this->getFileInfo()->openFile($open_mode, $use_include_path);
         }
 
@@ -204,6 +227,6 @@ class FilesystemStubIterator extends FilesystemIterator
 
     public function valid()
     {
-        return FALSE;
+        return false;
     }
 }
