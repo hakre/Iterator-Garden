@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014, 2015 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,15 +22,39 @@
  */
 class IndexIterationTest extends IteratorTestCase
 {
-    function testIteration()
+    /**
+     * @test
+     */
+    function index()
     {
-        $expected  = new ArrayIterator(range(0, 2));
-        $actual    = new IndexIteration($expected);
+        $array = new ArrayIterator(array(1, 2, 3));
+        $this->assertEquals(3, iterator_count($array), 'precondition');
 
-        $this->assertSame(NULL, $actual->getIndex());
+        $iterator = new IndexIteration($array);
+        $this->assertNull($iterator->getIndex());
+        $iterator->rewind();
+        $this->assertEquals(0, $iterator->getIndex());
 
-        $this->assertIteration($expected, $actual);
+        $this->assertEquals(3, iterator_count($iterator), 'precondition');
+        $this->assertEquals(3, $iterator->getIndex());
+        $this->assertFalse($iterator->valid());
+    }
 
-        $this->assertSame(2, $actual->getIndex());
+    /**
+     * @test
+     *
+     * In this iteration assertion, the inner iterator is next()'ed as well while the
+     * outer iterator (IndexIterator) that decorates it is next()'ing it, too.
+     */
+    function stackedIteration()
+    {
+        $expected = new ArrayIterator(range(0, 2));
+        $actual   = new IndexIteration($expected);
+
+        $this->assertSame(null, $actual->getIndex());
+
+        $this->assertIteration(new StaticIterator($expected), $actual);
+
+        $this->assertSame(3, $actual->getIndex());
     }
 }
