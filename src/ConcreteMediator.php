@@ -22,14 +22,32 @@
  */
 class ConcreteMediator implements Mediator
 {
+    /**
+     * PCRE pattern to validate type-names against
+     *
+     * This mediator normalizes names also to lower-case
+     */
+    const TYPE_NAME_PATTERN = '~^[a-z][a-z0-9-]*$~';
+
+    /**
+     * @var array event-map by type containing all registered callbacks by their ID
+     */
     private $events;
+
+    /**
+     * @var array|callable[] ID map callables that have been added as listeners
+     */
     private $register;
+
+    /**
+     * @var int counter for unique IDs
+     */
     private $regId = 0;
 
     private $type;
 
     /**
-     * @param string $type
+     * @param string   $type
      * @param callable $callable
      *
      * @throws InvalidArgumentException
@@ -47,7 +65,7 @@ class ConcreteMediator implements Mediator
     private function validateCallable($callable)
     {
         $callableName = null;
-        $valid = null;
+        $valid        = null;
 
         if (
             is_array($callable)
@@ -56,10 +74,10 @@ class ConcreteMediator implements Mediator
                 || !in_array(gettype($callable[0]), array('object', 'string'))
             )
         ) {
-            $valid = false;
-            $callableName  = "Array";
+            $valid        = false;
+            $callableName = "Array";
         } else {
-            $valid = is_callable($callable, TRUE, $callableName);
+            $valid = is_callable($callable, true, $callableName);
         }
 
         if (!$valid) {
@@ -69,7 +87,7 @@ class ConcreteMediator implements Mediator
 
     /**
      * @param string $type
-     * @param array $arguments
+     * @param array  $arguments
      *
      * @throws InvalidArgumentException
      */
@@ -87,7 +105,7 @@ class ConcreteMediator implements Mediator
 
             $callback = $this->register[$id];
 
-            if (!is_callable($callback, FALSE, $callableName)) {
+            if (!is_callable($callback, false, $callableName)) {
                 throw new InvalidArgumentException(sprintf("callback is not callable '%s'", $callableName));
             }
 
@@ -98,21 +116,18 @@ class ConcreteMediator implements Mediator
 
     /**
      * @param string $type
+     *
      * @return string normalized type-name
      */
     private function validateTypeName($type)
     {
-        if (is_array($type)) {
-            throw new InvalidArgumentException(sprintf('event type can not be array'));
-        } elseif (is_object($type)) {
-            $name = get_class($type);
-        } else {
-            $name = (string)$type;
+        if (is_array($type) || is_object($type) && !method_exists($type, '__toString')) {
+            throw new InvalidArgumentException(sprintf('event type can not be an array or object'));
         }
 
-        $name = strtolower(trim($name));
-        if (!preg_match('~^[a-z]+$~', $name)) {
-            throw new InvalidArgumentException(sprintf("invalid event type name '%s'", $type));
+        $name = strtolower(trim($type));
+        if (!preg_match(self::TYPE_NAME_PATTERN, $name)) {
+            throw new InvalidArgumentException(sprintf("invalid event type name '%s'", $name));
         }
 
         return $name;
