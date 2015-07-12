@@ -37,14 +37,34 @@ class ConcreteMediator implements Mediator
     public function addListener($type, $callable)
     {
         $type = $this->validateTypeName($type);
-
-        if (!is_callable($callable, TRUE, $callableName)) {
-            throw new InvalidArgumentException(sprintf("invalid callback syntax '%s'", $callableName));
-        }
+        $this->validateCallable($callable);
 
         $id                       = ++$this->regId;
         $this->register[$id]      = $callable;
         $this->events[$type][$id] = $id;
+    }
+
+    private function validateCallable($callable)
+    {
+        $callableName = null;
+        $valid = null;
+
+        if (
+            is_array($callable)
+            && (
+                count($callable) !== 2
+                || !in_array(gettype($callable[0]), array('object', 'string'))
+            )
+        ) {
+            $valid = false;
+            $callableName  = "Array";
+        } else {
+            $valid = is_callable($callable, TRUE, $callableName);
+        }
+
+        if (!$valid) {
+            throw new InvalidArgumentException(sprintf("invalid callback syntax '%s'", $callableName));
+        }
     }
 
     /**

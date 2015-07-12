@@ -34,7 +34,7 @@ class PregStringMatcherTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException PHPUnit_Framework_Error_Warning
-     * @expectedExceptionMessage preg_match(): Empty regular expression
+     * @expectedExceptionMessage Empty regular expression
      */
     public function exceptionInvalidPattern()
     {
