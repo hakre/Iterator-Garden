@@ -19,25 +19,48 @@
 
 /**
  * Class FetchingIterator
+ *
+ * Iterator that fetches from a callback on rewind()/next() operation and invalidates when a certain value (null by
+ * default, often also false) is returned from the callback.
  */
 class FetchingIterator implements Iterator
 {
+    /**
+     * @var callable
+     */
     private $callback;
-    private $index;
-    private $current;
-    private $valid;
+
+    /**
+     * @var null|mixed value that invalidates the iterator (strict comparison)
+     */
     private $stopValue;
 
     /**
-     * @param Callable $callback
-     * @param mixed $stopValue (optional)
+     * @var int
      */
-    public function __construct($callback, $stopValue = NULL)
+    private $index;
+
+    /**
+     * @var mixed
+     */
+    private $current;
+
+    /**
+     * @var bool
+     */
+    private $valid;
+
+
+    /**
+     * @param Callable $callback
+     * @param mixed    $stopValue (optional) return value that invalidates iterator
+     */
+    public function __construct($callback, $stopValue = null)
     {
-        if (!is_callable($callback, TRUE)) {
+        if (!is_callable($callback, true)) {
             throw new InvalidArgumentException('Invalid callback given.');
         }
-        $this->callback = $callback;
+        $this->callback  = $callback;
         $this->stopValue = $stopValue;
     }
 
@@ -70,6 +93,7 @@ class FetchingIterator implements Iterator
     protected function fetchNext()
     {
         $this->index++;
-        $this->valid = $this->stopValue !== $this->current = call_user_func($this->callback);
+        $this->current = call_user_func($this->callback);
+        $this->valid   = $this->stopValue !== $this->current;
     }
 }

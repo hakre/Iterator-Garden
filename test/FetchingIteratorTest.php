@@ -17,20 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Class FetchingIteratorTest
+ *
+ * @covers FetchingIterator
+ */
 class FetchingIteratorTest extends IteratorTestCase
 {
-
-    public function testConstructor()
+    /**
+     * @test
+     *
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid callback given.
+     */
+    public function creation()
     {
         $callback = $this->createCallbackWithValues();
         $subject  = new FetchingIterator($callback);
         $this->assertInstanceOf('FetchingIterator', $subject);
+
+        new FetchingIterator(null);
     }
 
+    /**
+     * @param array $values
+     *
+     * @return callable
+     */
     private function createCallbackWithValues(array $values = array())
     {
         $creator = function () use ($values) {
             $stack = array_reverse($values);
+
             return function () use (&$stack) {
                 return array_pop($stack);
             };
@@ -39,7 +57,10 @@ class FetchingIteratorTest extends IteratorTestCase
         return $creator();
     }
 
-    public function testIteration()
+    /**
+     * @test
+     */
+    public function iteration()
     {
         $values = array('a', 'b', 'c');
 
