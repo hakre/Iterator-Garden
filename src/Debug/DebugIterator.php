@@ -22,9 +22,9 @@
  */
 class DebugIterator extends IteratorIterator
 {
-    const MODE_NOTICE = 1;
-    const MODE_ECHO   = 2;
-    const MODE_STDERR = 3;
+    const MODE_NOTICE = 0;
+    const MODE_ECHO   = 1;
+    const MODE_STDERR = 2;
 
     private $mode = self::MODE_ECHO;
 
@@ -79,5 +79,13 @@ class DebugIterator extends IteratorIterator
             default:
                 throw new RuntimeException($message);
         }
+    }
+
+    /**
+     * @param int $mode
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
     }
 }

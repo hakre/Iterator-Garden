@@ -34,12 +34,60 @@ class DebugIteratorTest extends IteratorTestCase
     /**
      * @test
      */
-    public function iteration()
+    public function iterations()
     {
         $subject = new DebugIterator(new EmptyIterator());
-        $this->expectOutputString(
-            'Iterating (EmptyIterator): #0 rewind' . "\n" . 'Iterating (EmptyIterator): #0 valid' . "\n"
-        );
         $this->assertCount(0, iterator_to_array($subject));
+
+        $subject = new DebugIterator(new ArrayIterator(array(1)));
+        $this->expectOutputString(
+            'Iterating (EmptyIterator): #0 rewind' . "\n" . 'Iterating (EmptyIterator): #0 valid' . "\n" .
+
+            'Iterating (ArrayIterator): #0 rewind' . "\n" . 'Iterating (ArrayIterator): #0 valid' . "\n" .
+            'Iterating (ArrayIterator): #0 current' . "\n" .
+            'Iterating (ArrayIterator): #0 key' . "\n" .
+            'Iterating (ArrayIterator): #1 next' . "\n" .
+            'Iterating (ArrayIterator): #1 valid' . "\n"
+        );
+
+        $this->assertCount(1, iterator_to_array($subject));
+    }
+
+    /**
+     * @test
+     */
+    public function stdErrMode()
+    {
+        $subject = new DebugIterator(new EmptyIterator());
+        $subject->setMode($subject::MODE_STDERR);
+        $this->assertCount(0, iterator_to_array($subject));
+        $this->expectOutputString('');
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException PHPUnit_Framework_Error_Notice
+     * @expectedExceptionMessage Iterating (EmptyIterator): #0 rewind
+     */
+    public function noticeMode()
+    {
+        $subject = new DebugIterator(new EmptyIterator());
+        $subject->setMode($subject::MODE_NOTICE);
+        $this->assertEquals(0, @iterator_count($subject));
+        iterator_count($subject);
+    }
+
+    /**
+     * @test
+     *
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Iterating (EmptyIterator): #0 rewind
+     */
+    public function exceptioneMode()
+    {
+        $subject = new DebugIterator(new EmptyIterator());
+        $subject->setMode(42);
+        iterator_count($subject);
     }
 }
