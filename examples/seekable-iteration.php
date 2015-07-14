@@ -21,7 +21,7 @@
  * The SeekableIteration class is an Iterator that allows to seek while iterating
  */
 
-require(__DIR__ . '/../src/SeekableIteration.php');
+require(__DIR__ . '/../vendor/autoload.php');
 
 $array = new ArrayIterator(range('A', 'J')); # 10 Characters A to J
 
