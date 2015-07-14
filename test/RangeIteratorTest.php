@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013, 2014 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014, 2015 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,8 +17,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Class RangeIteratorTest
+ *
+ * @covers RangeIterator
+ */
 class RangeIteratorTest extends IteratorTestCase
 {
+    /**
+     * @test
+     */
+    public function creation()
+    {
+        $this->assertInstanceOf('RangeIterator', new RangeIterator("44", 2));
+        $this->assertInstanceOf('RangeIterator', new RangeIterator(44.4, 2));
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Step must be integer or float, boolean given
+     */
+    public function creationWithInvalidStep()
+    {
+        $edge = new RangeIterator(1, 2, null);
+        $this->assertInstanceOf('RangeIterator', $edge);
+
+        new RangeIterator(1, 2, false);
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Low must be a number or a numeric string, NULL given
+     */
+    public function creationWithInvalidFrom()
+    {
+        new RangeIterator(null, 2, null);
+    }
 
     public function testRange()
     {
@@ -36,10 +72,26 @@ class RangeIteratorTest extends IteratorTestCase
         $this->assertRangeIterator(1, 1, 1);
     }
 
-    private function assertRangeIterator($from, $to, $step = NULL)
+    /**
+     * @test
+     */
+    public function seeking()
     {
-        $refl       = new ReflectionClass('RangeIterator');
-        $iterator   = $refl->newInstanceArgs(array($from, $to, $step));
+        $range = new RangeIterator(1, 4);
+        $range->seek(0);
+        $this->assertTrue($range->valid());
+        $range->seek(3);
+        $this->assertTrue($range->valid());
+        $range->next();
+        $this->assertFalse($range->valid(), 'precondition after next check');
+        $range->seek(4);
+        $this->assertFalse($range->valid());
+    }
+
+    private function assertRangeIterator($from, $to, $step = null)
+    {
+        $reflection = new ReflectionClass('RangeIterator');
+        $iterator   = $reflection->newInstanceArgs(array($from, $to, $step));
         $rangeArray = new ArrayIterator(range($from, $to, $step));
 
         $this->assertIteration($rangeArray, $iterator);

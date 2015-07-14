@@ -1,7 +1,7 @@
 <?php
 /*
  * Iterator Garden - Let Iterators grow like flowers in the garden.
- * Copyright 2013, 2014 hakre <http://hakre.wordpress.com/>
+ * Copyright 2013, 2014, 2015 hakre <http://hakre.wordpress.com/>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,12 +26,12 @@ class RangeIterator implements Iterator
 {
     private $offset, $index, $length, $step;
 
-    public function __construct($low, $high, $step = NULL)
+    public function __construct($low, $high, $step = null)
     {
         $low  = $this->inputArgumentNumeric('Low', $low);
         $high = $this->inputArgumentNumeric('High', $high);
 
-        if ($step === NULL) {
+        if ($step === null) {
             $step = 1;
         }
         if (!is_integer($step) and !is_float($step)) {
@@ -76,12 +76,13 @@ class RangeIterator implements Iterator
      */
     public function seek($position)
     {
-        $this->index = $position;
+        $this->index = max(0, (int)$position);
     }
 
     /**
      * @param $name
      * @param $value
+     *
      * @return float|int
      * @throws InvalidArgumentException
      */
@@ -93,6 +94,7 @@ class RangeIterator implements Iterator
 
         if (is_string($value)) {
             $int = (int)$value;
+
             return "$int" === $value ? (int)$value : (float)$value;
         }
 
