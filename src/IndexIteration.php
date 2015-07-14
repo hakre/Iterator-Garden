@@ -25,20 +25,36 @@
  */
 class IndexIteration extends IteratorIterator
 {
+    /**
+     * @var int
+     */
     private $index;
 
+    /**
+     * Rewind the Iterator to the first element
+     *
+     * @return void Any returned value is ignored.
+     */
     public function rewind()
     {
         $this->index = 0;
         parent::rewind();
     }
 
+    /**
+     * Move forward to next element
+     *
+     * @return void Any returned value is ignored.
+     */
     public function next()
     {
         $this->index++;
         parent::next();
     }
 
+    /**
+     * @return int|null zero-based index, null if not initialized (rewound)
+     */
     public function getIndex()
     {
         return $this->index;

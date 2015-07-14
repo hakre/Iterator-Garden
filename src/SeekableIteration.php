@@ -24,38 +24,54 @@
  */
 class SeekableIteration extends IndexIteration implements SeekableIterator
 {
-    private $skipNextRewind;
+    /**
+     * @var boolean
+     */
+    private $skipNextRewindOrRewind;
+
+    /**
+     * @var boolean
+     */
     private $seekStartPosition;
 
     public function rewind()
     {
-        $this->skipNextRewind || parent::rewind();
-        $this->skipNextRewind = FALSE;
+        if ($this->skipNextRewindOrRewind) {
+            $this->skipNextRewindOrRewind = false;
+        } else {
+            parent::rewind();
+        }
+
         if ($this->seekStartPosition) {
             $this->seek($this->seekStartPosition);
             $this->seekStartPosition = 0;
         }
     }
 
+    /**
+     * Move forward to next element
+     *
+     * @return void Any returned value is ignored.
+     */
     public function next()
     {
-        $this->skipNextRewind || parent::next();
-        $this->skipNextRewind = FALSE;
+        $this->skipNextRewindOrRewind || parent::next();
+        $this->skipNextRewindOrRewind = false;
     }
 
     /**
-     * @param int $position
+     * @param int  $position
      * @param bool $skipNextRewind (optional) Ignore the next rewind() or next() - allows to offset
+     *
      * @throws InvalidArgumentException
      */
-    public function seek($position, $skipNextRewind = FALSE)
+    public function seek($position, $skipNextRewind = false)
     {
-
         $position = max(0, (int)$position);
 
         $index = $this->getIndex();
 
-        if (NULL === $index) {
+        if (null === $index) {
             parent::rewind();
             $index = 0;
         }
@@ -70,22 +86,21 @@ class SeekableIteration extends IndexIteration implements SeekableIterator
             $this->next();
         }
 
-        $this->skipNextRewind = (bool)$skipNextRewind;
+        $this->skipNextRewindOrRewind = (bool)$skipNextRewind;
     }
 
     /**
      * set starting position for next iteration
      *
      * @param $position
+     *
      * @return $this
      */
     public function seekStart($position)
     {
-
         $this->seekStartPosition = max(0, (int)$position);
 
         return $this;
-
     }
 }
 
