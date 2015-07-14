@@ -38,8 +38,18 @@ class ForeachIteratorTest extends ForeachIteratorBaseTest
     public function staticUnits()
     {
         $array    = array('foo' => 'bar');
-        $object   = (object) $array;
+        $object   = (object)$array;
         $expected = array_values($array);
+
+        # iterator should always pass through
+        $subject     = new EmptyIterator();
+        $traversable = ForeachIterator::getTraversable($subject);
+        $this->assertInstanceOf('Traversable', $traversable);
+        $this->assertIterationValues(array(), $subject);
+
+        $iterator = ForeachIterator::getIterator($subject);
+        $this->assertInstanceOf('Iterator', $iterator);
+        $this->assertIterationValues(array(), $subject);
 
         # array needs conversion
         $traversable = ForeachIterator::getTraversable($array);
@@ -51,7 +61,7 @@ class ForeachIteratorTest extends ForeachIteratorBaseTest
         $this->assertIterationValues($expected, $iterator);
 
         # IteratorAggregate doesn't for Traversable but for Iterator
-        $aggregate = new ArrayObject($object);
+        $aggregate   = new ArrayObject($object);
         $traversable = ForeachIterator::getTraversable($aggregate);
         $this->assertSame($aggregate, $traversable);
         $this->assertIterationValues($expected, $traversable);
@@ -59,5 +69,25 @@ class ForeachIteratorTest extends ForeachIteratorBaseTest
         $iterator = ForeachIterator::getIterator($aggregate);
         $this->assertInstanceOf('Iterator', $iterator);
         $this->assertIterationValues($expected, $iterator);
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage boolean is not foreachable
+     */
+    public function getTraversableException()
+    {
+        ForeachIterator::getTraversable(false);
+    }
+
+    /**
+     * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage boolean is not foreachable
+     */
+    public function getIteratorException()
+    {
+        ForeachIterator::getIterator(false);
     }
 }
